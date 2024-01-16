@@ -1,0 +1,52 @@
+
+function enviarCorreoPorUnidad($unidad, $rit, $era, $tipotramite, $tipoplazo, $ndias, $fehchaingreso, $fechafatal, $pdo) {
+    $queryCorreo = "SELECT correo FROM correounidad WHERE unidad = ?";
+    $stmtCorreo = $pdo->prepare($queryCorreo);
+    $stmtCorreo->bindParam(1, $unidad, PDO::PARAM_INT);
+    $stmtCorreo->execute();
+    $correoResultado = $stmtCorreo->fetch(PDO::FETCH_ASSOC);
+
+    if ($correoResultado && isset($correoResultado['correo'])) { 
+        $destinatario = $correoResultado['correo'];
+
+        require 'PHPMailer/PHPMailer.php';
+        require 'PHPMailer/SMTP.php';
+        require 'PHPMailer/POP3.php';
+        require 'PHPMailer/Exception.php';
+
+        $asunto = "alerta";
+        $mensaje = "nueva alerta :\n\n" .
+                "RIT: $rit\n" .
+                "Año: $era\n" .
+                "Tipo de Trámite: $tipotramite\n" .
+                "Tipo de Plazo: $tipoplazo\n" .
+                "Número de Días: $ndias\n" .
+                "Fecha de Ingreso: $fehchaingreso\n" .
+                "Fecha Fatal: $fechafatal\n" .
+                "Unidad: $unidad\n"; 
+
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        $mail->isSMTP();
+        $mail->Host = 'mail.pjud.cl';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'mmujica';
+        $mail->Password = 'Mmujica1406_';
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('mmujica@pjud.cl', 'JG Test PHP');
+        $mail->addAddress($destinatario);
+
+        $mail->Subject = $asunto;
+        $mail->Body    = $mensaje;
+
+        if (!$mail->send()) {
+            echo 'El mensaje no pudo ser enviado.';
+            echo 'Error de envío de correo: ' . $mail->ErrorInfo;
+        } else {
+            echo 'El mensaje se envió correctamente';
+        }
+    } else {
+        echo "No se encontró un correo asociado a la unidad seleccionada.";
+    }
+}

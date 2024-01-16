@@ -1,0 +1,79 @@
+<div id="ventanaModal" class="modal">
+    <div class="contenido-modal">
+      
+      <%  Set rs8144 = Server.CreateObject("ADODB.Recordset")
+     consulta8144 = "SELECT * FROM stat "
+     rs8144.Open consulta8144,Base
+ 
+  
+					
+  
+
+%>
+<table style="margin:0 auto; margin-bottom:10px;">
+				<tr>
+				  <td width=135 class="boton" bgcolor="white" align="center">Materia</td> 
+				    <td width=100 class="boton" bgcolor="white" align="center">Fecha maxima</td> 
+					  
+				</tr>
+				
+				
+				<%
+				
+				while not rs8144.EOF
+
+   'muestro todos los campos que tiene
+%>
+<tr>
+     <td width=100 class="boton" bgcolor="white" align="center"><%=rs8144("sigla")%></td> 	 
+	 <td width=100 class="boton" bgcolor="white" align="center"><%=rs8144("fecha")%></td>
+	 </tr>
+	 <%
+   
+    rs8144.movenext
+wend
+%>
+</table>
+
+  <A style="cursor:pointer; background-color:red; padding:3px; color:white; border-radius:3px;" id="btnCerrar"  target="_blank">Cerrar</A>
+    </div>
+  </div>
+  
+  <script Languaje="javascript">
+
+// Ventana modal
+var modal = document.getElementById("ventanaModal");
+
+
+
+// Botón que abre el modal
+var boton = document.getElementById("abrirModal");
+
+var btnAgendar = document.getElementById("btnAgendar")
+
+btnAgendar.addEventListener("click",ed)
+
+function ed(){
+modal.style.display = "block";
+}
+
+var btnCerrar = document.getElementById("btnCerrar")
+
+btnCerrar.addEventListener("click",cer)
+
+function cer(){
+modal.style.display = "none";
+}
+// Hace referencia al elemento <span> que tiene la X que cierra la ventana
+var span = document.getElementsByClassName("cerrar")[0];
+
+
+
+// Si el usuario hace click fuera de la ventana, se cierra.
+window.addEventListener("click",function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+});
+
+</script>

@@ -1,0 +1,9 @@
+CREATE TABLE `stat` (
+  `id_stat` INT(100) NOT NULL AUTO_INCREMENT,
+  `sigla` VARCHAR(100) NOT NULL,
+  `tipoaudiencia` VARCHAR(100) NOT NULL,
+  `fecha` DATE NOT NULL,
+  `fecha_A` DATE DEFAULT NULL,
+  `diferencia` INT(100) DEFAULT NULL,
+  PRIMARY KEY (`id_stat`)
+)
