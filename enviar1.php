@@ -1,5 +1,6 @@
-
 <?php
+error_reporting(0);
+
 
 include "conexion.php";
 
@@ -17,7 +18,8 @@ use PHPMailer\PHPMailer\SMTP;
 
 $mail = new PHPMailer();
 $mail->isSMTP();
-$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+//$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+$mail->SMTPDebug = false;
 $mail->Host = 'mail.pjud.cl';
 $mail->Port = 587;
 $mail->SMTPAuth = true;
@@ -26,22 +28,27 @@ $mail->Password = 'Mmujica1406_';
 $mail->setFrom('cplazos@pjud.cl', 'Sistema de Control de Plazos');
 $mail->addReplyTo('cplazos@pjud.cl', 'no responder');
 
-
 //Recupera Variables
-//$id_unidad=$_POST['id_unidad'];
-//$rit=$_POST['rit'];
-//$era=$_POST['era'];
-//$tipotramite=$_POST['tipotramite'];
-//$fechafatal=$_POST['fechafatal'];
-//$observacion=$_POST['observacion'];
+$id_unidad=$_POST['id_unidad'];
+$rit=$_POST['rit'];
+$era=$_POST['era'];
+$tipotramite=$_POST['tipotramite'];
+$fechafatal=$_POST['fechafatal'];
+$iniciales = $_POST['iniciales'];
+$fechafatal2=str_replace("-","",$fechafatal);
+$fechaformato=date_format(date_create($fechafatal),"d/m/Y");
 
+$observacion=$_POST['observacion'];
 
-$id_unidad=4;
-$rit=1;
-$era=2001;
-$tipotramite="Tramite X";
-$fechafatal=date("d-m-Y");
-$observacion="Glosa del trámite";
+//$id_unidad=4;
+//$rit=1;
+//$era=2001;
+//$tipotramite="Tramite ABC";
+//$observacion="Glosa del trámite";
+//$fechafatal="2024-01-22";
+//$fechafatal2=str_replace("-","",$fechafatal);
+//$fechaformato=date_format(date_create($fechafatal),"d/m/Y");
+
 
 
 $ahora=date('d/m/Y H:i:s');
@@ -49,8 +56,7 @@ $ahora=date('d/m/Y H:i:s');
 
 $sqlcorreo= "SELECT correo FROM correounidad WHERE id_unidad=$id_unidad";
 
-echo $sqlcorreo;
-
+//echo $sqlcorreo;
             $result = $conn->query($sqlcorreo);
                         if ($result->num_rows > 0) {
                           while($row = $result->fetch_assoc()) {
@@ -64,10 +70,9 @@ echo $sqlcorreo;
                         }
                         $conn->close();
 
-
 //CAMBIAR CORREO
-//$correocc=$_POST['correocc'];
-$correocc='jafuentesc@pjud.cl';
+$correocc=$_POST['correocc'];
+//$correocc='mmujicaa2@gmail.com';
 
 if($correocc<>""){
     $mail->addAddress($correocc, 'Notificaciones sistema de Control de Plazos'.$ahora);
@@ -75,60 +80,11 @@ if($correocc<>""){
 }
 
 
-
-$finicio=strtotime(date("Y-m-d")."+5 days");;
-$inicio=date('Y-m-d',$finicio);
-
-$ffin=strtotime(date("Y-m-d")."+5 days");
-$fin=date('Y-m-d',$ffin);
-
 $fecha=date("Y-m-d")." ".date("h:m:s");
 
+$eventoplano="RIT: $rit".", "."Año: ".$era.",      "."Iniciales: ".$iniciales.",           "."Tipo trámite: ".$tipotramite.", "."Observación: ".$observacion.", "."Fecha perentoria: ".$fechaformato;
 
 
-
-    /*
-    $mime_boundary = "----Meeting Booking----".MD5(TIME());
-
-    $headers = "From: ".$from_name." <".$from_address.">\n";
-    $headers .= "Reply-To: ".$from_name." <".$from_address.">\n";
-    $headers .= "MIME-Version: 1.0\n";
-    $headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\n";
-    $headers .= "Content-Type: text/calendar; method=REQUEST";
-    $headers .= "Content-class: urn:content-classes:calendarmessage\n";
-    $headers .="Create Email Body (HTML)";
-    $message = "--$mime_boundary\r\n";
-    $message .= "Content-Type: text/html; charset=UTF-8\n";
-    $message .= "Content-Transfer-Encoding: 8bit\n\n";
-    $message .= "<html>\n";
-    $message .= "<body>\n";
-    $message .= '<p> '.$from_name.'</p>';
-    $message .= '<p>'.$description.'</p>';
-    $message .= "</body>\n";
-    $message .= "</html>\n";
-    $message .= "--$mime_boundary\r\n";
-    */
-
-
-$eventoplano="RIT: $rit".", "."Año: ".$era.", "."Tipo trámite: ".$tipotramite.", "."Observación: ".$observacion.", "."Fecha perentoria: ".$fechafatal;
-
-
-
-function abc($htmlMsg)
-{
-    $temp = str_replace(array("\r\n"),"\n",$htmlMsg);
-    $lines = explode("\n",$temp);
-    $new_lines =array();
-    foreach($lines as $i => $line)
-    {
-        if(!empty($line))
-        $new_lines[]=trim($line);
-    }
-    $desc = implode("\r\n ",$new_lines);
-    return $desc;
-}
-
-$desc=abc($eventoplano);
 
 
 //$desc=nl2br($desc);
@@ -163,10 +119,11 @@ $evento="
         <h4 class='inline m-L'><b>Se agendado un evento en el Sistema de Control de Plazos</b></h4>
         <br />
         <span class=''>Tipo de trámite $tipotramite</span><br />
-        <span class=''>RIT $rit</span><br />
-        <span class=''>Año $era</span><br />
-        <span class=''>Fecha Perentoria: </span><span class='bold'>$fechafatal</span><br />
+        <span class=''>Iniciales: $iniciales</span><br />
+        <span class=''>RIT y Año: $rit</span><br />
+        <span class=''>Fecha Perentoria: </span><span class='bold'>$fechaformato</span><br />
         <span class=''>Detalle: </span><span class=''>$observacion</span><br /><br />
+        <span class=''>Información: http://10.3.91.56/controlplazos/index.php</span><br />
         <span class='bold'>Abra y acepte el calendario adjunto.</span>
 
     </div>
@@ -183,12 +140,12 @@ $evento="
 'VERSION:2.0' . "\r\n"  .
 'METHOD:REQUEST' . "\r\n"  .
 'BEGIN:VEVENT' . "\r\n"  .
-'DTSTART:20240115T110000Z' . "\r\n"  .
-'DTEND:20240115T120000Z' . "\r\n"  .
+'DTSTART;TZID=America/Santiago:'. $fechafatal2 .'T080000'. "\r\n" .
+'DTEND;TZID=America/Santiago:'. $fechafatal2 .'T140000'. "\r\n" .
 'DTSTAMP:'.date("Ymd\TGis"). "\r\n" .
 'ATTENDEE;RSVP=TRUE;CN=Sistema de Control de Plazos;X-NUM-GUESTS=0:MAILTO:noresponder@pjud.cl'. "\r\n" .
 'SUMMARY:Sistema de control de Plazos' . "\r\n"  .
-'UID:'.date("Ymd\TGis", strtotime($startTime)).rand()."@".$domain. "\r\n" .
+'UID:'.date("Ymd\TGis", strtotime($startTime)).rand(). "\r\n" .
 'X-MICROSOFT-CDO-BUSYSTATUS:TENTATIVE'. "\r\n" .
 'X-MICROSOFT-CDO-IMPORTANCE:1'. "\r\n" .
 'X-MICROSOFT-CDO-INTENDEDSTATUS:FREE'. "\r\n" .
@@ -197,7 +154,7 @@ $evento="
 'X-MS-OLK-CONFTYPE:0'. "\r\n" .
 'X-MS-OLK-SENDER;CN="Sistema de Control de Plazos":mailto:noresponder@pjud.cl'. "\r\n" .
 'LOCATION:Juzgado de Garantia' . "\r\n"  .
-'DESCRIPTION:Se ha generado un evento  para  controlar: '.$desc. "\r\n"  .
+'DESCRIPTION:Se ha generado un evento  para  controlar: '.$eventoplano. "\r\n"  .
 'END:VEVENT' . "\r\n"  .
 'END:VCALENDAR' . "\r\n" ;
 
@@ -237,9 +194,9 @@ $mail->AltBody = 'mensaje';
 
 //send the message, check for errors
 if (!$mail->send()) {
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
+    echo 'Error de envio de correo: ' . $mail->ErrorInfo;
 } else {
-    echo 'Message sent!';
+    echo 'Correo enviado!';
     //Section 2: IMAP
     //Uncomment these to save your message in the 'Sent Mail' folder.
     #if (save_mail($mail)) {

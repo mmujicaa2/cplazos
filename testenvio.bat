@@ -1,1 +1,0 @@
-c:\xampp\php\php.exe -f C:\xampp\htdocs\controlplazos\enviar.php

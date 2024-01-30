@@ -80,7 +80,7 @@ $mail->addReplyTo('mmujica@pjud.cl', 'JG TEST PHP REPLY');
 date(format)
 
 //CAMBIAR UNIDAD !
- $id_unidad=4;
+ $id_unidad=4; 
 
  $sqlunidad= "      SELECT correounidad.correo 
                     FROM cplazos.correounidad
@@ -93,7 +93,6 @@ date(format)
 
             $result = $conn->query($sqlunidad);
                         if ($result->num_rows > 0) {
-                      
                           while($row = $result->fetch_assoc()) {
 
 
@@ -106,15 +105,9 @@ date(format)
                         $conn->close();
 
 
-
-
 $mail->addAddress('mmujica@pjud.cl', 'TEST DESDE pjud a gmail pjud');
 //$mail->addAddress('mmujicaa2@gmail.com', 'TEST DESDE pjud a gmail');
 //$mail->addAddress('jafuentesc@pjud.cl', 'TEST DESDE pjud a gmail pjud');
-
-
-
-
 
 //calendario  y envio
 
