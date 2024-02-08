@@ -1,6 +1,6 @@
 <?php
-//include "config.php";
-include "conexion.php";
+include "config.php";
+//include "conexion.php";
 
 $fechainicial = isset($_POST['fechainicial']) ? $_POST['fechainicial'] : '';
 $fechafinal = isset($_POST['fechafinal']) ? $_POST['fechafinal'] : '';

@@ -31,26 +31,6 @@ $mail->isHTML(true);
 //$mail->msgHTML($ical2);
 
 
-
-
-function save_mail($mail)
-                            {
-                                //You can change 'Sent Mail' to any other folder or tag
-                                $path = '{imap.gmail.com:993/imap/ssl}[Gmail]/Sent Mail';
-
-                                //Tell your server to open an IMAP connection using the same username and password as you used for SMTP
-                                $imapStream = imap_open($path, $mail->Username, $mail->Password);
-
-                                $result2 = imap_append($imapStream, $path, $mail->getSentMIMEMessage());
-                                imap_close($imapStream);
-
-                                return $result2;
-                            } //fin funcion
-
-
-
-
-
 $fechahoy=date('d-m-Y');
 
 $sqlcorreo=  $sqlunidad= "SELECT
@@ -75,22 +55,19 @@ FROM
 echo $sqlcorreo;
 
             $result = $conn->query($sqlcorreo);
-             
-
                         if ($result->num_rows > 0) {
                           while($row = $result->fetch_assoc()) {
                             if($row<>""){
-                                $mail->addAddress($row['correo'], 'Notificaciones sistema de Control de Plazos');
-
-                            } //finfif
+                            $mail->addAddress($row['correo'], 'Notificaciones sistema de Control de Plazos');
 
                             if ($row['correocc']<>""){
                                 $mail->addAddress($row['correocc'], 'Notificaciones sistema de Control de Plazos');
-                            } //finif
+                            }
 
                             $fechaformato=date_format(date_create($row['fechafatal']),"d/m/Y");
+                            //$mail->addAddress('mmujica@pjud.cl', 'Notificaciones sistema de Control de Plazos'.$ahora);
                             $evento="
-                                <head>
+                            <head>
                               <style>
                                 body {
                                     height: 100%; width: 100%; max-width: 100%;
@@ -127,7 +104,6 @@ echo $sqlcorreo;
                             </body>
                             ";
 
-
                             $mail->Body =$evento;
                             $mail->Subject = 'Hoy vence un evento en Sistema de control de Plazos ';
                             $mail->AltBody = 'mensaje';
@@ -135,23 +111,40 @@ echo $sqlcorreo;
                             //send the message, check for errors
                             if (!$mail->send()) {
                                 echo 'Mailer Error: ' . $mail->ErrorInfo;
-                            } //fin if
-                            else
-                            {
-                                echo 'MENSAJE ENVIADO!';
-                            } //fin else
+                            } else {
+                                echo 'Message sent!';
+                                //Section 2: IMAP
+                                //Uncomment these to save your message in the 'Sent Mail' folder.
+                                #if (save_mail($mail)) {
+                                #    echo "Message saved!";
+                                #}
+                            }
 
-                        
-                            $mail->clearAllRecipients();
-                             }//fin while
-
-                        }
-                        else
+                            //Section 2: IMAP
+                            //IMAP commands requires the PHP IMAP Extension, found at: https://php.net/manual/en/imap.setup.php
+                            //Function to call which uses the PHP imap_*() functions to save messages: https://php.net/manual/en/book.imap.php
+                            //You can use imap_getmailboxes($imapStream, '/imap/ssl', '*' ) to get a list of available folders or labels, this can
+                            //be useful if you are trying to get this working on a non-Gmail IMAP server.
+                            function save_mail($mail)
                             {
+                                //You can change 'Sent Mail' to any other folder or tag
+                                $path = '{imap.gmail.com:993/imap/ssl}[Gmail]/Sent Mail';
+
+                                //Tell your server to open an IMAP connection using the same username and password as you used for SMTP
+                                $imapStream = imap_open($path, $mail->Username, $mail->Password);
+
+                                $result = imap_append($imapStream, $path, $mail->getSentMIMEMessage());
+                                imap_close($imapStream);
+
+                                return $result;
+                            }
+
+
+                            }
+                          }
+                        } else {
                           echo "0 results";
-                            } //finelse
-
-
+                        }
                         $conn->close();
 
 

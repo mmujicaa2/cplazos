@@ -32,20 +32,19 @@ $date = date("Y/m/d");
           <div class="modal-body">
           <form action="eventHandler.php" method="post">
     <label for="iniciales">Iniciales:</label><br>
-    <input type="text"  class="mb-2 mr-sm-2" id="iniciales" name="iniciales"  placeholder="ABC" title="Iniciales de responsable"  required><br>
+    <input type="text" id="iniciales" name="iniciales" required><br>
+    <label for="rit">RIT y AÑO:</label><br>
+    <input type="text" id="rit" name="rit" placeholder="Opcional" ><br>
 
-    <label for="rit">RIT-AÑO:</label><br>
-    <input type="text" class="mb-2 mr-sm-2" id="rit" name="rit" placeholder="Opcional" ><br>
+    <label for="tipotramite">Tipo de Trámite:</label><br>
+    <input type="text" id="tipotramite" name="tipotramite" required ><br>
 
-    <label for="tipotramite">Tipo de evento:</label><br>
-    <input type="text" class="mb-2 mr-sm-2" id="tipotramite" name="tipotramite" placeholder="Breve detalle" title="Breve decripción de evento"required ><br>
-
-    <label for="fechafatal">Fecha Perentoria:</label><br>
-    <input type="date" class="mb-2 mr-sm-2" id="fechafatal" name="fechafatal" title="Seleccione fecha" required><br>
+    <label for="fechafatal">Fecha Fatal:</label><br>
+    <input type="date" id="fechafatal" name="fechafatal" required><br>
  <!--  <label for="rit">Cantidad de días (habiles):</label>
     <input type="text" id="ndias" name="ndias" readonly><br><br> -->
     <label for="id_unidad">Unidad:</label><br>
-    <select name="id_unidad" class="mb-2 mr-sm-2"  data-toggle="tooltip" data-placement="top" title="A quienes les llegará correo en la fecha perentoria" id="id_unidad" required>
+    <select name="id_unidad" id="id_unidad" required>
         <option value="">Seleccione</option>
         <?php
             $sqlunidad = "SELECT * FROM unidad order by nunidad;";
@@ -58,12 +57,12 @@ $date = date("Y/m/d");
 
         
     </select><br>
-    <label for="correocc">CC:( puede ser pjud,gmail, etc)</label>
+    <label for="correocc">CC:</label>
     <br>
-    <input type="email" class="mb-2 mr-sm-2" id="correocc" name="correocc" pattern="[a-zA-Z0-9!#$%&'*\/=?^_`\{\|\}~\+\-]([\.]?[a-zA-Z0-9!#$%&'*\/=?^_`\{\|\}~\+\-])+@[a-zA-Z0-9]([^@&%$\/\(\)=?¿!\.,:;]|\d)+[a-zA-Z0-9][\.][a-zA-Z]{2,4}([\.][a-zA-Z]{2})?" placeholder="Opcional: alguien@gmail.com" style="width : 60%" ><br>
+    <input type="email" id="correocc" name="correocc"  placeholder="Opcional" style="width : 60%" ><br>
     
     <label for="observacion">Observaciones:</label>
-    <textarea id="observacion" name="observacion" rows="5" cols="50"  placeholder="Opcional, detalle del evento"></textarea>
+    <textarea id="observacion" name="observacion" rows="5" cols="60"  placeholder="Opcional"></textarea>
 <br>
 <hr>
     <input type="submit" class="btn btn-primary" value="Agregar Alerta">

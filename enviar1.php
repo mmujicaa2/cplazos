@@ -116,13 +116,13 @@ $evento="
 <body>
     <div class=wit>
     <div class=padding32>
-        <h4 class='inline m-L'><b>Se agendado un evento en el Sistema de Control de Plazos</b></h4>
+        <h4 class='inline m-L'><b >Se agendado un evento en el Sistema de Control de Plazos</b></h4>
         <br />
         <span class=''>Tipo de trámite $tipotramite</span><br />
         <span class=''>Iniciales: $iniciales</span><br />
         <span class=''>RIT y Año: $rit</span><br />
         <span class=''>Fecha Perentoria: </span><span class='bold'>$fechaformato</span><br />
-        <span class=''>Detalle: </span><span class=''>$observacion</span><br /><br />
+        <span class=''>Detalle: </span><span class='bold'>$observacion</span><br /><br />
         <span class=''>Información: http://10.3.91.56/controlplazos/index.php</span><br />
         <span class='bold'>Abra y acepte el calendario adjunto.</span>
 
